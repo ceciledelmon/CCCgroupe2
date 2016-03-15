@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Untitled Document</title>
+</head>
+<body>
+
+<section ng-app="leCoon" ng-controller="mainController">
+    <input ng-show="username == ''" type="text" ng-model="name">
+    <div ng-show="username == ''" ng-click="saveName(name)">Enregistrer</div>
+    <p ng-show="username != ''">Bonjour, {{username}}</p>
+</section>
+   
+    <script src="js/angular.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
