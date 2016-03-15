@@ -8,20 +8,24 @@
 
 <body id="game">
 
-    <section ng-app="leCoon" ng-controller="mainController">
+    <section ng-app="leCoon" ng-controller="mainController" ng-cloak>
         <div class="{{color}}">{{counter}} ({{minutes}}:{{secondes}})</div>
 
         <ul>
             <li ng-repeat="object in objects track by $index">
                 <p>{{object.nomObjet}}</p>
-                <button>Prendre une photo</button>
+                <button ng-click="takePicture($index)">Prendre une photo</button>
             </li>
+            <div>
+                <img id="preview">
+                <button id="delete"  ng-click="deleteImg($event)" >Supprimer</button>
+                <button id="send" ng-click="sendImg($event)">Valider</button>
+            </div>
         </ul>
     </section>
 
     <script src="js/angular.min.js"></script>
     <script src="cordova.js"></script>
-    <script src="js/ng-cordova.min.js"></script>
     <script src="js/app.js"></script>
 </body>
 
