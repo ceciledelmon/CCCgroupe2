@@ -6,13 +6,15 @@
 </head>
 <body>
 
-<section ng-app="leCoon" ng-controller="mainController">
+<section ng-app="leCoon" ng-controller="mainController" ng-cloak>
     <input ng-show="username == ''" type="text" ng-model="name">
     <div ng-show="username == ''" ng-click="saveName(name)">Enregistrer</div>
     <p ng-show="username != ''">Bonjour, {{username}}</p>
+    <a ng-show="username != ''" href="choix.html">Choix de niveau</a>
 </section>
    
     <script src="js/angular.min.js"></script>
+    <script src="cordova.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
