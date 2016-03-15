@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Untitled Document</title>
+</head>
+
+<body>
+
+    <section ng-app="leCoon" ng-controller="mainController">
+        <p>Choix</p>
+        <ul>
+            <li id="maison">Maison
+                <ul>
+                    <li><a data="home_1" ng-click="storeLevel($event)" href="page.html">1</a></li>
+                    <li><a data="home_2" ng-click="storeLevel($event)" href="page.html">2</a></li>
+                    <li><a data="home_3" ng-click="storeLevel($event)" href="page.html">3</a></li>
+                </ul>
+            </li>
+            <li id="campagne">Campagne
+                <ul>
+                    <li><a data="country_1" ng-click="storeLevel($event)" href="page.html">1</a></li>
+                    <li><a data="country_2" ng-click="storeLevel($event)" href="page.html">2</a></li>
+                    <li><a data="country_3" ng-click="storeLevel($event)" href="page.html">3</a></li>
+                </ul>
+            </li id="ville">
+            <li>Ville
+                <ul>
+                    <li><a data="city_1" ng-click="storeLevel($event)" href="page.html">1</a></li>
+                    <li><a data="city_2" ng-click="storeLevel($event)" href="page.html">2</a></li>
+                    <li><a data="city_3" ng-click="storeLevel($event)" href="page.html">3</a></li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <script src="js/angular.min.js"></script>
+    <script src="js/ng-cordova.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
