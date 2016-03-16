@@ -3,8 +3,9 @@ var leCoon = angular.module('leCoon', []);
 
 // Création du contrôleur
 var createController = function ($scope, $timeout, $http, $location) {
-    //Instanciation du nombre d'objets
+    //Instanciation du nombre d'objets et de la redirection
     $scope.numberObj = 3;
+    $scope.redirect = false;
 
     //Si le niveau choisi est 1
     if (sessionStorage.level == 1) {
@@ -64,7 +65,7 @@ var createController = function ($scope, $timeout, $http, $location) {
 
     //En cas d'échec de récupération de données
     function echec(resultat) {
-        alert('Echec lors de la récupération de données')
+        alert('Echec lors de la récupération de données');
     }
 
     //Si l'utilisateur n'a pas encore fourni de pseudo
@@ -74,7 +75,7 @@ var createController = function ($scope, $timeout, $http, $location) {
     } else {
         $scope.username = localStorage.name;
     }
-
+    
     //Sauvegarde le pseudo de l'utilisateur
     $scope.saveName = function (name) {
         localStorage.name = name;
@@ -83,7 +84,7 @@ var createController = function ($scope, $timeout, $http, $location) {
     };
 
     //Nombre de secondes au timer
-    var time = 120;
+    var time = 10;
     $scope.counter = time;
     $scope.color = "good"; //Classe du timer
     $scope.minutes = '0' + Math.floor($scope.counter / 60); //Affichage des minutes
@@ -113,7 +114,8 @@ var createController = function ($scope, $timeout, $http, $location) {
             }
         } else {
             //Rediriger vers page de fail
-        }
+                $scope.redirect = true;
+            }
     }
 
     //Si on est sur la page de jeu
@@ -132,11 +134,11 @@ var createController = function ($scope, $timeout, $http, $location) {
         };
 
         $scope.takePicture = function (index) {
-            navigator.camera.getPicture(function(imageURI){
+            navigator.camera.getPicture(function (imageURI) {
                 var image = document.getElementById('preview');
-                image.setAttribute('data', index);
                 //Intégre le src dans la balise img
                 image.src = imageURI;
+                image.title = index;
             }, cameraError, options);
         }
     }, false);
@@ -154,40 +156,46 @@ var createController = function ($scope, $timeout, $http, $location) {
 
     //Envoi l'image sur le serveur
     $scope.sendImg = function (evt) {
-        var image = evt.currentTarget.previousElementSibling.previousElementSibling;
-        var imageSrc = image.src;
-        var index = image.getAttribute('data');
-        var object = $scope.objects[index];
+            var image = evt.currentTarget.previousElementSibling.previousElementSibling;
+            var imageSrc = image.src;
+            var index = image.title;
+            var object = $scope.objects[index];
 
-        //Options d'envoi
-        var options = new FileUploadOptions();
-        options.fileKey = "file";
-        options.fileName = imageSrc.substr(imageSrc.lastIndexOf('/') + 1);
-        options.mimeType = "image/jpeg";
-        options.chunkedMode = true;
+            //Options d'envoi
+            var options = new FileUploadOptions();
+            options.fileKey = "file";
+            options.fileName = imageSrc.substr(imageSrc.lastIndexOf('/') + 1);
+            options.mimeType = "image/jpeg";
+            options.chunkedMode = true;
 
-        var params = new Object();
+            var params = new Object();
 
-        options.params = params;
-        options.chunkedMode = false;
+            options.params = params;
+            options.chunkedMode = false;
 
-        //Envoi au fichier php de traitement
-        var ft = new FileTransfer();
-        ft.upload(imageSrc, "http://lpcm.univ-lr.fr/~mlemetay/CCCPhoto/upload.php", function(r){
-            alert(r);
-            var promesse = $http({
-                "url": 'http://lpcm.univ-lr.fr/~mlemetay/CCCPhoto/recherche.php?callback=JSON_CALLBACK',
-                "data": {"index" : index, "keyFr" : object.nomObjet, 'keyEn1' : object.tradObjet, 'keyEn2' : object.synObjet, 'name' : options.fileName},
-                "method": "jsonp",
-            });
-        promesse.then(success, error);
-        }, fail, options);
-    }
+            //Envoi au fichier php de traitement
+            var ft = new FileTransfer();
+            ft.upload(imageSrc, "http://lpcm.univ-lr.fr/~mlemetay/CCCPhoto/upload.php", function (r) {
+                var params = JSON.stringify({
+                    "index": pregMatch(index),
+                    "keyFr": object.nomObjet,
+                    'keyEn1': object.tradObjet,
+                    'keyEn2': object.synObjet,
+                    'name': options.fileName
+                });
+                
+                alert(params);
 
-    //En cas de succès
-    function win(r) {
-        alert(r);
-    }
+                var promesse = $http.jsonp('http://lpcm.univ-lr.fr/~mlemetay/CCCPhoto/recherche.php?callback=JSON_CALLBACK&data=' + params);
+                promesse.then(success, error);
+            }, fail, options);
+        }
+        /*
+            var params = JSON.stringify({"index" : 2, "keyFr" : 'logiciel', 'keyEn1' : 'software', 'keyEn2' : 'multimedia', 'name' : '1458082265684'});
+    
+            var promesse = $http.jsonp('http://lpcm.univ-lr.fr/~mlemetay/CCCPhoto/recherche.php?callback=JSON_CALLBACK&data='+params);
+            promesse.then(success, error);
+            */
 
     //En cas d'erreur
     function fail(error) {
@@ -195,37 +203,37 @@ var createController = function ($scope, $timeout, $http, $location) {
     }
 
     function success(result) {
-        alert(result);
         //A revoir la réception des data
-        /*$scope.pourcentage = result.data;
+        $scope.pourcentage = result.data.pourcent;
+        alert($scope.pourcentage);
         if ($scope.pourcentage > 50) {
             $scope.objects[result.data.index].valide = 'valide';
             var image = document.getElementById('preview');
             image.src = "";
             checkAllValide();
-
         } else {
             $scope.objects[result.data.index].valide = 'invalide';
-        }*/
-
-    }
-    
-    function error(erreur){
-        alert('Erreur requête JSon');
+        }
     }
 
-   /* function checkAllValide() {
-        var nbValide = 0;
-        var nbElems = $scope.objects.length;
-        for (var i = 0; i < $scope.objects.length; i++) {
-            if ($scope.objects[i].valide == 'valide') {
-                var scoreFinal = $scope.color;
-            }
-        }
-        if (nbValide == nbElems) {
-            localStorage.level = parseInt(localStorage.level) + 1;
-        }
-    }*/
+    function error(erreur) {
+        alert('erreur');
+    }
+
+    function checkAllValide() {
+         var nbValide = 0;
+         var nbElems = $scope.objects.length;
+         for (var i = 0; i < $scope.objects.length; i++) {
+             if ($scope.objects[i].valide == 'valide') {
+                 var scoreFinal = $scope.color;
+                 nbValide++;
+             }
+         }
+        alert(nbValide);
+         if (nbValide == nbElems) {
+             localStorage.level = parseInt(localStorage.level) + 1;
+         }
+     }
 
 
 };
