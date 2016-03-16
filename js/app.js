@@ -27,6 +27,7 @@ var createController = function ($scope, $timeout, $http, $location) {
         sessionStorage.topic = value[0];
         sessionStorage.level = parseInt(value[1]);
     }
+    
 
     //Si le niveau et sujet sont définis
     if (sessionStorage.topic != null && sessionStorage.level != null) {
