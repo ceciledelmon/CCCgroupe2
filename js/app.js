@@ -184,8 +184,6 @@ var createController = function ($scope, $timeout, $http, $location) {
                     'name': options.fileName
                 });
                 
-                alert(params);
-
                 var promesse = $http.jsonp('http://lpcm.univ-lr.fr/~mlemetay/CCCPhoto/recherche.php?callback=JSON_CALLBACK&data=' + params);
                 promesse.then(success, error);
             }, fail, options);
@@ -205,7 +203,6 @@ var createController = function ($scope, $timeout, $http, $location) {
     function success(result) {
         //A revoir la réception des data
         $scope.pourcentage = result.data.pourcent;
-        alert($scope.pourcentage);
         if ($scope.pourcentage > 50) {
             $scope.objects[result.data.index].valide = 'valide';
             var image = document.getElementById('preview');
@@ -217,7 +214,7 @@ var createController = function ($scope, $timeout, $http, $location) {
     }
 
     function error(erreur) {
-        alert('erreur');
+        alert('Erreur');
     }
 
     function checkAllValide() {
@@ -229,7 +226,6 @@ var createController = function ($scope, $timeout, $http, $location) {
                  nbValide++;
              }
          }
-        alert(nbValide);
          if (nbValide == nbElems) {
              localStorage.level = parseInt(localStorage.level) + 1;
          }
