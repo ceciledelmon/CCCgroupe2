@@ -1,14 +1,13 @@
 <?php
-    print_r($_FILES);
-    $new_image_name = $_FILES["file"]["name"];
-    move_uploaded_file($_FILES["file"]["tmp_name"], "uploads/".$new_image_name);
 
-/*    $keyFr = $_POST['keyFr'];
-    $keyEn1 = $_POST['keyEn1'];
-    $keyEn2 = $_POST['keyEn2'];
-    $index = $_POST['index'];
+    $dataDecode = json_decode($_GET['data']);
 
-    $fileName = $_FILES["file"]["name"];
+    $keyFr = $dataDecode->{'keyFr'};
+    $keyEn1 = $dataDecode->{'keyEn1'};
+    $keyEn2 = $dataDecode->{'keyEn2'};
+    $index = $dataDecode->{'index'};
+    $fileName = $dataDecode->{'name'};
+
     $fileLink = "http://lpcm.univ-lr.fr/~mlemetay/CCCPhoto/uploads/".$fileName.".jpg";
     $url = "http://www.google.com/searchbyimage?image_url=$fileLink";
     $proxy = 'wwwcache.univ-lr.fr:3128';
@@ -41,11 +40,38 @@
         $valide = 0;
         $elements = 0;
         foreach($title as $elem){
-            if(strpos($elem, $keyFr) || strpos($elem, $keyEn1) ||   strpos($elem, $keyEn2)){
-                $valide++;
+            if(strlen($elem) != 0){
+                $elements++;
+                if(strpos($elem, $keyFr) || strpos($elem, $keyEn1) ||   strpos($elem, $keyEn2)){
+                    $valide++;
+                }
             }
+            /*if(strlen($elem) != 0){
+                $elements++;
+                if(strpos($elem, 'software') || strpos($elem, 'netbook')){
+                    $valide++;
+                }
+            }*/
     }
+
     $pourcentage = array('index' => $index, 'pourcent' => ($valide/$elements)*100);
-    echo('angular.callbacks._0('.json_encode($pourcentage).')');
-*/
+
+    if(array_key_exists('callback', $_GET)){
+
+    header('Content-Type: text/javascript; charset=utf8');
+    header('Access-Control-Allow-Origin: http://www.example.com/');
+    header('Access-Control-Max-Age: 3628800');
+    header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
+
+    $callback = $_GET['callback'];
+    echo $callback.'('.json_encode($pourcentage).');';
+
+}else{
+    // normal JSON string
+    header('Content-Type: application/json; charset=utf8');
+
+    echo json_encode($pourcentage);
+} 
+    //echo('angular.callbacks._0(['.json_encode($pourcentage).'])');
+
 ?>
