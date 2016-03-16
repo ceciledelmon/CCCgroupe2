@@ -177,7 +177,7 @@ var createController = function ($scope, $timeout, $http, $location) {
             var ft = new FileTransfer();
             ft.upload(imageSrc, "http://lpcm.univ-lr.fr/~mlemetay/CCCPhoto/upload.php", function (r) {
                 var params = JSON.stringify({
-                    "index": pregMatch(index),
+                    "index": parseInt(index),
                     "keyFr": object.nomObjet,
                     'keyEn1': object.tradObjet,
                     'keyEn2': object.synObjet,
