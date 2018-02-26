@@ -1,5 +1,6 @@
 # CCCgroupe2
-Projet jeu pour enfants recherche de mots en trouvant la photographie associée
-coucou Quentin
 
-Morgan : "Bonjour."
+Challenge 2 de code.
+
+Projet de jeu pour enfants. 
+recherche de mots en trouvant la photographie associée
